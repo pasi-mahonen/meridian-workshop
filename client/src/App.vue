@@ -348,6 +348,7 @@ body {
   padding: 1.25rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
+  border-top: 4px solid var(--color-primary);
   box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
 }
@@ -356,6 +357,11 @@ body {
   box-shadow: var(--shadow-md);
   transform: translateY(-1px);
 }
+
+.stat-card.warning { border-top-color: #ea580c; }
+.stat-card.success { border-top-color: #059669; }
+.stat-card.danger  { border-top-color: #dc2626; }
+.stat-card.info    { border-top-color: var(--color-primary); }
 
 .stat-label {
   color: var(--color-text-secondary);
@@ -465,7 +471,7 @@ tbody tr:hover {
 .badge {
   display: inline-block;
   padding: 0.313rem 0.75rem;
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -546,6 +552,11 @@ html.dark .stat-card {
   background: #1e293b;
   border-color: #334155;
 }
+
+html.dark .stat-card         { border-top-color: var(--color-primary); }
+html.dark .stat-card.warning { border-top-color: #ea580c; }
+html.dark .stat-card.success { border-top-color: #059669; }
+html.dark .stat-card.danger  { border-top-color: #dc2626; }
 
 html.dark .card-title {
   color: #f1f5f9;
