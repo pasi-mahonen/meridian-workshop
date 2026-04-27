@@ -134,6 +134,22 @@ class RestockingRecommendation(BaseModel):
     estimated_cost: float
     priority_score: int
 
+class Task(BaseModel):
+    id: int
+    title: str
+    priority: str
+    dueDate: str
+    status: str
+
+class CreateTaskRequest(BaseModel):
+    title: str
+    priority: str
+    dueDate: str
+
+# In-memory task store (resets on server restart, same as all other mock data)
+_tasks: list = []
+_task_id_counter: int = 100
+
 # API endpoints
 @app.get("/")
 def root():
@@ -396,6 +412,44 @@ def get_restocking_recommendations(
         return result
 
     return recommendations
+
+@app.get("/api/tasks", response_model=List[Task])
+def get_tasks():
+    """Get all tasks."""
+    return _tasks
+
+@app.post("/api/tasks", response_model=Task, status_code=201)
+def create_task(request: CreateTaskRequest):
+    """Create a new task."""
+    global _task_id_counter
+    task = Task(
+        id=_task_id_counter,
+        title=request.title,
+        priority=request.priority,
+        dueDate=request.dueDate,
+        status="pending"
+    )
+    _tasks.append(task.model_dump())
+    _task_id_counter += 1
+    return task
+
+@app.delete("/api/tasks/{task_id}", status_code=204)
+def delete_task(task_id: int):
+    """Delete a task by ID."""
+    global _tasks
+    original_len = len(_tasks)
+    _tasks = [t for t in _tasks if t["id"] != task_id]
+    if len(_tasks) == original_len:
+        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+
+@app.patch("/api/tasks/{task_id}", response_model=Task)
+def toggle_task(task_id: int):
+    """Toggle a task's status between pending and completed."""
+    task = next((t for t in _tasks if t["id"] == task_id), None)
+    if not task:
+        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+    task["status"] = "completed" if task["status"] == "pending" else "pending"
+    return task
 
 if __name__ == "__main__":
     import uvicorn
