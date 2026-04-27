@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian Components — System Architecture</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  header {
+    max-width: 1200px;
+    margin: 0 auto 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 1.25rem;
+  }
+
+  header h1 { font-size: 1.5rem; font-weight: 700; color: #f1f5f9; }
+  header h1 span { color: #3b82f6; }
+  header p { font-size: 0.875rem; color: #64748b; margin-top: 0.25rem; }
+  .doc-meta { text-align: right; font-size: 0.813rem; color: #475569; line-height: 1.6; }
+
+  .diagram {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-rows: auto auto auto auto;
+    gap: 0;
+  }
+
+  /* ── Layer labels ── */
+  .layer {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    align-items: stretch;
+    margin-bottom: 0.75rem;
+  }
+
+  .layer-label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 1.25rem;
+    font-size: 0.688rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #475569;
+  }
+
+  .layer-body {
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid;
+  }
+
+  /* Layer colour themes */
+  .layer-browser .layer-body  { background: #1e293b; border-color: #334155; }
+  .layer-frontend .layer-body { background: #0c2340; border-color: #1e40af; }
+  .layer-api .layer-body      { background: #0f172a; border-color: #334155; padding: 0.5rem 1.5rem; }
+  .layer-backend .layer-body  { background: #140d26; border-color: #5b21b6; }
+  .layer-tests .layer-body    { background: #0d2015; border-color: #166534; }
+
+  /* ── HTTP arrow between FE and BE ── */
+  .layer-api .layer-body {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+
+  .arrow-line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #7c3aed);
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .arrow-line::after {
+    content: '▶';
+    position: absolute;
+    right: -1px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7c3aed;
+    font-size: 0.75rem;
+  }
+
+  .arrow-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #94a3b8;
+    white-space: nowrap;
+  }
+
+  /* ── Box grid inside each layer ── */
+  .boxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .box {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.813rem;
+    border: 1px solid;
+    flex-shrink: 0;
+  }
+
+  /* box colour variants */
+  .box-blue   { background: #1e3a5f; border-color: #2563eb; }
+  .box-indigo { background: #1e1b4b; border-color: #4338ca; }
+  .box-purple { background: #2e1065; border-color: #7c3aed; }
+  .box-green  { background: #052e16; border-color: #15803d; }
+  .box-slate  { background: #1e293b; border-color: #475569; }
+  .box-amber  { background: #2d1a02; border-color: #b45309; }
+
+  .box-title {
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    opacity: 0.7;
+  }
+
+  .box ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .box ul li {
+    font-size: 0.813rem;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .box ul li::before { content: '·'; color: #475569; }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.625rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-left: 0.25rem;
+  }
+
+  .tag-new  { background: #1d4ed8; color: #bfdbfe; }
+  .tag-fix  { background: #15803d; color: #bbf7d0; }
+
+  .section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.75rem;
+  }
+
+  .divider {
+    width: 1px;
+    background: #334155;
+    align-self: stretch;
+    margin: 0 0.25rem;
+  }
+
+  /* ── Tech badges ── */
+  .tech-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+  }
+
+  .tech-badge {
+    font-size: 0.688rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 99px;
+    border: 1px solid;
+  }
+
+  .tb-blue   { background: #172554; border-color: #1d4ed8; color: #93c5fd; }
+  .tb-purple { background: #2e1065; border-color: #7c3aed; color: #c4b5fd; }
+  .tb-green  { background: #052e16; border-color: #15803d; color: #86efac; }
+  .tb-amber  { background: #431407; border-color: #c2410c; color: #fed7aa; }
+  .tb-slate  { background: #0f172a; border-color: #475569; color: #94a3b8; }
+
+  /* ── Data flow notes ── */
+  .notes {
+    max-width: 1200px;
+    margin: 1.5rem auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .note {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+  }
+
+  .note h4 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+  }
+
+  .note p {
+    font-size: 0.813rem;
+    color: #94a3b8;
+    line-height: 1.6;
+  }
+
+  .note p strong { color: #cbd5e1; }
+
+  /* RFP req pills */
+  .req-pills {
+    max-width: 1200px;
+    margin: 1.5rem auto 0;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .req-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 99px;
+    padding: 0.375rem 0.875rem;
+    font-size: 0.75rem;
+  }
+
+  .req-pill .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+
+  .dot-green  { background: #22c55e; }
+  .dot-blue   { background: #3b82f6; }
+  .dot-purple { background: #a855f7; }
+  .dot-amber  { background: #f59e0b; }
+
+  .req-pill strong { color: #f1f5f9; }
+  .req-pill span   { color: #64748b; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1><span>Meridian Components</span> — System Architecture</h1>
+    <p>Current-state technical overview · RFP MC-2026-0417 deliverable R4</p>
+  </div>
+  <div class="doc-meta">
+    Prepared by Accenture delivery team<br>
+    April 2026
+  </div>
+</header>
+
+<div class="diagram">
+
+  <!-- BROWSER -->
+  <div class="layer layer-browser">
+    <div class="layer-label">User</div>
+    <div class="layer-body">
+      <div class="section-title">Browser — http://localhost:3000</div>
+      <div class="boxes">
+        <div class="box box-slate">
+          <div class="box-title">Entry point</div>
+          <ul>
+            <li>index.html + main.js</li>
+            <li>Vue app mount</li>
+            <li>Vue Router (SPA)</li>
+          </ul>
+        </div>
+        <div class="box box-slate">
+          <div class="box-title">Persistent state</div>
+          <ul>
+            <li>localStorage: dark mode pref</li>
+            <li>localStorage: language</li>
+            <li>Session: active filters</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRONTEND -->
+  <div class="layer layer-frontend">
+    <div class="layer-label">Frontend</div>
+    <div class="layer-body">
+      <div class="section-title">Vue 3 SPA · Vite · client/src/</div>
+      <div class="boxes">
+
+        <div class="box box-blue">
+          <div class="box-title">Views (pages)</div>
+          <ul>
+            <li>Dashboard (Overview)</li>
+            <li>Inventory</li>
+            <li>Orders</li>
+            <li>Demand Forecast</li>
+            <li>Reports</li>
+            <li>Finance (Spending)</li>
+            <li>Restocking Recommendations <span class="tag tag-new">R2</span></li>
+          </ul>
+        </div>
+
+        <div class="box box-blue">
+          <div class="box-title">Shared Components</div>
+          <ul>
+            <li>FilterBar</li>
+            <li>ProfileMenu + ProfileDetailsModal</li>
+            <li>TasksModal</li>
+            <li>LanguageSwitcher</li>
+            <li>DarkModeToggle <span class="tag tag-new">D3</span></li>
+          </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="box box-indigo">
+          <div class="box-title">Composables</div>
+          <ul>
+            <li>useFilters — global filter state</li>
+            <li>useAuth — current user / tasks</li>
+            <li>useI18n — translations <span class="tag tag-fix">R1</span></li>
+          </ul>
+        </div>
+
+        <div class="box box-indigo">
+          <div class="box-title">api.js (axios)</div>
+          <ul>
+            <li>getInventory(filters)</li>
+            <li>getOrders(filters)</li>
+            <li>getDemand(filters)</li>
+            <li>getSpending*(filters)</li>
+            <li>getReports*(filters)</li>
+            <li>getRestocking(filters) <span class="tag tag-new">R2</span></li>
+          </ul>
+        </div>
+
+        <div class="box box-indigo">
+          <div class="box-title">Locales</div>
+          <ul>
+            <li>en.js — English strings</li>
+            <li>ja.js — Japanese strings</li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="tech-row">
+        <span class="tech-badge tb-blue">Vue 3 Composition API</span>
+        <span class="tech-badge tb-blue">Vue Router 4</span>
+        <span class="tech-badge tb-blue">Vite</span>
+        <span class="tech-badge tb-blue">Axios</span>
+        <span class="tech-badge tb-slate">Port 3000</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- API BOUNDARY -->
+  <div class="layer layer-api">
+    <div class="layer-label">Interface</div>
+    <div class="layer-body">
+      <span class="arrow-label">HTTP / REST · JSON · CORS enabled</span>
+      <div class="arrow-line"></div>
+      <span class="arrow-label">http://localhost:8001/api</span>
+    </div>
+  </div>
+
+  <!-- BACKEND -->
+  <div class="layer layer-backend">
+    <div class="layer-label">Backend</div>
+    <div class="layer-body">
+      <div class="section-title">FastAPI · Python · server/main.py</div>
+      <div class="boxes">
+
+        <div class="box box-purple">
+          <div class="box-title">Read Endpoints</div>
+          <ul>
+            <li>GET /api/inventory (+ /{id})</li>
+            <li>GET /api/orders (+ /{id})</li>
+            <li>GET /api/demand</li>
+            <li>GET /api/backlog</li>
+            <li>GET /api/dashboard/summary</li>
+            <li>GET /api/spending/{summary,monthly,categories,transactions}</li>
+            <li>GET /api/reports/{quarterly,monthly-trends}</li>
+            <li>GET /api/restocking <span class="tag tag-new">R2</span></li>
+          </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="box box-purple">
+          <div class="box-title">Filter Utility</div>
+          <ul>
+            <li>apply_filters(items, params)</li>
+            <li>warehouse param → location match</li>
+            <li>category param → category match</li>
+            <li>Shared by all list endpoints</li>
+          </ul>
+        </div>
+
+        <div class="box box-purple">
+          <div class="box-title">Restocking Algorithm <span class="tag tag-new">R2</span></div>
+          <ul>
+            <li>Join inventory × demand on SKU</li>
+            <li>units_needed = forecast − on_hand</li>
+            <li>Priority score (reorder + trend)</li>
+            <li>Greedy budget ceiling filter</li>
+          </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="box box-amber">
+          <div class="box-title">Pydantic Models</div>
+          <ul>
+            <li>InventoryItem</li>
+            <li>Order / BacklogItem</li>
+            <li>DemandForecast</li>
+            <li>RestockingRecommendation</li>
+          </ul>
+        </div>
+
+        <div class="box box-amber">
+          <div class="box-title">Mock Data Store</div>
+          <ul>
+            <li>mock_data.py — loaded at startup</li>
+            <li>inventory_items (32 SKUs)</li>
+            <li>orders (250 records)</li>
+            <li>demand_forecasts (9 items)</li>
+            <li>spending_transactions</li>
+            <li><em>No database — in-memory only</em></li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="tech-row">
+        <span class="tech-badge tb-purple">FastAPI</span>
+        <span class="tech-badge tb-purple">Pydantic v2</span>
+        <span class="tech-badge tb-purple">uvicorn</span>
+        <span class="tech-badge tb-purple">Python 3.11+</span>
+        <span class="tech-badge tb-slate">Port 8001</span>
+        <span class="tech-badge tb-amber">In-memory mock data</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTS -->
+  <div class="layer layer-tests" style="margin-top:0.75rem">
+    <div class="layer-label">Tests <span class="tag tag-new" style="display:block;margin-top:4px">R3</span></div>
+    <div class="layer-body">
+      <div class="section-title">pytest · Playwright · tests/frontend/ · 57 tests · 0 failures</div>
+      <div class="boxes">
+
+        <div class="box box-green">
+          <div class="box-title">Page Object Models</div>
+          <ul>
+            <li>AppPage (nav, filters)</li>
+            <li>InventoryPage</li>
+            <li>OrdersPage</li>
+            <li>DemandPage</li>
+            <li>SpendingPage</li>
+            <li>ReportsPage</li>
+            <li>RestockingPage</li>
+            <li>DarkModePage</li>
+          </ul>
+        </div>
+
+        <div class="box box-green">
+          <div class="box-title">Test Suites</div>
+          <ul>
+            <li>test_navigation (14)</li>
+            <li>test_dark_mode (3)</li>
+            <li>test_reports (9)</li>
+            <li>test_restocking (6)</li>
+            <li>test_restocking_scorecards (3)</li>
+            <li>test_inventory (5)</li>
+            <li>test_orders (5)</li>
+            <li>test_demand (6)</li>
+            <li>test_spending (6)</li>
+          </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="box box-green">
+          <div class="box-title">Test Helpers</div>
+          <ul>
+            <li>ApiClient — live data fixtures</li>
+            <li>screenshot_helper — base64 HTML report embeds</li>
+            <li>pytest-html self-contained report</li>
+          </ul>
+        </div>
+
+        <div class="box box-green">
+          <div class="box-title">Key Patterns</div>
+          <ul>
+            <li>No hardcoded expected values</li>
+            <li>API called before each assertion</li>
+            <li>Screenshots on every step</li>
+            <li>Browser: Chromium (headless)</li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="tech-row">
+        <span class="tech-badge tb-green">pytest</span>
+        <span class="tech-badge tb-green">Playwright</span>
+        <span class="tech-badge tb-green">pytest-html</span>
+        <span class="tech-badge tb-green">requests</span>
+        <span class="tech-badge tb-slate">Python 3.11+</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Notes -->
+<div class="notes">
+  <div class="note">
+    <h4>Data flow</h4>
+    <p>User interactions update Vue's reactive filter state via <strong>useFilters</strong>. Components watch those refs and call <strong>api.js</strong>, which passes warehouse/category/budget as query params to the backend. FastAPI applies <strong>apply_filters()</strong> and returns filtered JSON. No server-side state is mutated.</p>
+  </div>
+  <div class="note">
+    <h4>Known constraints</h4>
+    <p><strong>No persistence layer.</strong> All data lives in mock_data.py and resets on server restart. Task CRUD endpoints were wired in the previous vendor's iteration but write operations are not yet exposed. Scaling to real data will require a database migration (e.g. PostgreSQL + SQLAlchemy).</p>
+  </div>
+  <div class="note">
+    <h4>Delivery status</h4>
+    <p>
+      <strong>R1</strong> Reports fixed — filters, i18n, Composition API ✓<br>
+      <strong>R2</strong> Restocking view + scorecards ✓<br>
+      <strong>R3</strong> Browser test suite (57 tests) ✓<br>
+      <strong>R4</strong> This document ✓<br>
+      <strong>D3</strong> Dark mode — all 7 views ✓
+    </p>
+  </div>
+</div>
+
+<!-- RFP req pills -->
+<div class="req-pills">
+  <div class="req-pill"><div class="dot dot-green"></div><strong>R1</strong> <span>Reports remediation</span></div>
+  <div class="req-pill"><div class="dot dot-blue"></div><strong>R2</strong> <span>Restocking recommendations</span></div>
+  <div class="req-pill"><div class="dot dot-purple"></div><strong>R3</strong> <span>Automated browser tests</span></div>
+  <div class="req-pill"><div class="dot dot-amber"></div><strong>R4</strong> <span>Architecture documentation</span></div>
+  <div class="req-pill"><div class="dot dot-blue"></div><strong>D3</strong> <span>Dark mode</span></div>
+</div>
+
+</body>
+</html>
