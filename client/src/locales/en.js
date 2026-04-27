@@ -7,6 +7,7 @@ export default {
     finance: 'Finance',
     demandForecast: 'Demand Forecast',
     reports: 'Reports',
+    restocking: 'Restocking',
     companyName: 'Meridian Components',
     subtitle: 'Inventory Management System'
   },
@@ -186,6 +187,31 @@ export default {
       change: 'Change',
       trend: 'Trend',
       period: 'Period'
+    }
+  },
+
+  // Restocking
+  restocking: {
+    title: 'Restocking Recommendations',
+    description: 'Recommended purchase orders based on stock levels, demand forecasts, and your budget',
+    budgetLabel: 'Budget ceiling',
+    budgetPlaceholder: 'Enter budget...',
+    applyBudget: 'Apply',
+    itemsRecommended: 'items recommended',
+    totalCost: 'Total cost',
+    noneFound: 'No restocking recommendations for the selected filters.',
+    table: {
+      sku: 'SKU',
+      name: 'Item Name',
+      warehouse: 'Warehouse',
+      stock: 'In Stock',
+      reorderPoint: 'Reorder Point',
+      forecast: 'Forecast',
+      toOrder: 'To Order',
+      unitCost: 'Unit Cost',
+      estCost: 'Est. Cost',
+      trend: 'Trend',
+      priority: 'Priority'
     }
   },
 

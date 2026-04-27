@@ -7,6 +7,7 @@ export default {
     finance: '財務',
     demandForecast: '需要予測',
     reports: 'レポート',
+    restocking: '補充',
     companyName: 'Meridian Components',
     subtitle: '在庫管理システム'
   },
@@ -186,6 +187,31 @@ export default {
       change: '変化',
       trend: 'トレンド',
       period: '期間'
+    }
+  },
+
+  // Restocking
+  restocking: {
+    title: '補充推奨',
+    description: '在庫レベル、需要予測、予算に基づく推奨発注',
+    budgetLabel: '予算上限',
+    budgetPlaceholder: '予算を入力...',
+    applyBudget: '適用',
+    itemsRecommended: '件の推奨',
+    totalCost: '合計コスト',
+    noneFound: '選択したフィルターに対する補充推奨はありません。',
+    table: {
+      sku: 'SKU',
+      name: '品目名',
+      warehouse: '倉庫',
+      stock: '在庫数',
+      reorderPoint: '再注文点',
+      forecast: '予測需要',
+      toOrder: '注文数',
+      unitCost: '単価',
+      estCost: '推定コスト',
+      trend: 'トレンド',
+      priority: '優先度'
     }
   },
 

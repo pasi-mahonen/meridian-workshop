@@ -120,6 +120,20 @@ class CreatePurchaseOrderRequest(BaseModel):
     expected_delivery_date: str
     notes: Optional[str] = None
 
+class RestockingRecommendation(BaseModel):
+    sku: str
+    name: str
+    category: str
+    warehouse: str
+    quantity_on_hand: int
+    reorder_point: int
+    forecasted_demand: int
+    trend: str
+    units_needed: int
+    unit_cost: float
+    estimated_cost: float
+    priority_score: int
+
 # API endpoints
 @app.get("/")
 def root():
@@ -324,6 +338,64 @@ def get_monthly_trends(
     result = list(months.values())
     result.sort(key=lambda x: x['month'])
     return result
+
+@app.get("/api/restocking", response_model=List[RestockingRecommendation])
+def get_restocking_recommendations(
+    warehouse: Optional[str] = None,
+    category: Optional[str] = None,
+    budget: Optional[float] = None
+):
+    """Get restocking recommendations based on stock levels, demand forecasts, and budget."""
+    filtered_inventory = apply_filters(inventory_items, warehouse=warehouse, category=category)
+
+    demand_by_sku = {d['item_sku']: d for d in demand_forecasts}
+
+    recommendations = []
+    for item in filtered_inventory:
+        forecast = demand_by_sku.get(item['sku'])
+        if not forecast:
+            continue
+
+        units_needed = max(0, forecast['forecasted_demand'] - item['quantity_on_hand'])
+        if units_needed == 0:
+            continue
+
+        estimated_cost = round(units_needed * item['unit_cost'], 2)
+
+        priority_score = 0
+        if item['quantity_on_hand'] < item['reorder_point']:
+            priority_score += 3
+        if forecast['trend'] == 'increasing':
+            priority_score += 2
+        elif forecast['trend'] == 'stable':
+            priority_score += 1
+
+        recommendations.append(RestockingRecommendation(
+            sku=item['sku'],
+            name=item['name'],
+            category=item['category'],
+            warehouse=item['warehouse'],
+            quantity_on_hand=item['quantity_on_hand'],
+            reorder_point=item['reorder_point'],
+            forecasted_demand=forecast['forecasted_demand'],
+            trend=forecast['trend'],
+            units_needed=units_needed,
+            unit_cost=item['unit_cost'],
+            estimated_cost=estimated_cost,
+            priority_score=priority_score
+        ))
+
+    recommendations.sort(key=lambda r: (-r.priority_score, -r.estimated_cost))
+
+    if budget and budget > 0:
+        result, running_total = [], 0.0
+        for rec in recommendations:
+            if running_total + rec.estimated_cost <= budget:
+                result.append(rec)
+                running_total += rec.estimated_cost
+        return result
+
+    return recommendations
 
 if __name__ == "__main__":
     import uvicorn
