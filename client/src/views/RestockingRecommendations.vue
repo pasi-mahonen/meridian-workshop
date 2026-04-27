@@ -220,10 +220,11 @@ export default {
 }
 
 .scorecard {
-  background: white;
-  border-radius: 10px;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
   padding: 1.25rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .scorecard-label {
@@ -249,11 +250,12 @@ export default {
   display: flex;
   align-items: center;
   gap: 2rem;
-  background: white;
-  border-radius: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 1.25rem 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   flex-wrap: wrap;
 }
 
@@ -344,10 +346,11 @@ export default {
 }
 
 .card {
-  background: white;
-  border-radius: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .table-container { overflow-x: auto; }

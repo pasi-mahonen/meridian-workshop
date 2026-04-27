@@ -759,9 +759,10 @@ export default {
 }
 
 .kpi-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
   padding: 1rem;
 }
 
@@ -772,7 +773,7 @@ export default {
 .kpi-label {
   font-size: 0.813rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.025em;
 }
@@ -780,21 +781,21 @@ export default {
 .kpi-value {
   font-size: 2rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-primary);
   margin-bottom: 0.5rem;
   letter-spacing: -0.025em;
 }
 
 .kpi-goal {
   font-size: 0.813rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
   margin-bottom: 0.75rem;
 }
 
 .kpi-progress-bar {
   width: 100%;
   height: 6px;
-  background: #f1f5f9;
+  background: var(--color-border-subtle);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -1109,7 +1110,7 @@ export default {
 }
 
 .clickable-row:hover {
-  background: #eff6ff !important;
+  background: var(--color-primary-light) !important;
 }
 
 /* Tasks Card Styles */

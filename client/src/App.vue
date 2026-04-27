@@ -168,6 +168,45 @@ export default {
 </script>
 
 <style>
+/* ============================================================
+   DESIGN TOKENS — edit here, cascade everywhere
+   ============================================================ */
+:root {
+  --color-primary:        #2563eb;
+  --color-primary-light:  #eff6ff;
+  --color-primary-hover:  #1d4ed8;
+  --color-bg:             #f1f5f9;
+  --color-surface:        #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-border:         #e2e8f0;
+  --color-border-subtle:  #f1f5f9;
+  --color-text-primary:   #0f172a;
+  --color-text-secondary: #64748b;
+  --color-text-tertiary:  #94a3b8;
+  --color-success:        #10b981;
+  --color-warning:        #f59e0b;
+  --color-danger:         #ef4444;
+  --shadow-sm:            0 1px 2px 0 rgba(0,0,0,.05);
+  --shadow-md:            0 4px 12px 0 rgba(0,0,0,.08);
+  --shadow-lg:            0 8px 24px 0 rgba(0,0,0,.10);
+  --radius-sm:            8px;
+  --radius-md:            12px;
+}
+
+html.dark {
+  --color-bg:             #0f172a;
+  --color-surface:        #1e293b;
+  --color-surface-raised: #1e293b;
+  --color-border:         #334155;
+  --color-border-subtle:  #1e293b;
+  --color-text-primary:   #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-tertiary:  #64748b;
+  --shadow-sm:            0 1px 2px 0 rgba(0,0,0,.20);
+  --shadow-md:            0 4px 12px 0 rgba(0,0,0,.30);
+  --shadow-lg:            0 8px 24px 0 rgba(0,0,0,.40);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -176,8 +215,8 @@ export default {
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: #f8fafc;
-  color: #1e293b;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -189,9 +228,9 @@ body {
 }
 
 .top-nav {
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -224,16 +263,16 @@ body {
 .logo h1 {
   font-size: 1.375rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-primary);
   letter-spacing: -0.025em;
 }
 
 .subtitle {
   font-size: 0.813rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-weight: 400;
   padding-left: 0.75rem;
-  border-left: 1px solid #e2e8f0;
+  border-left: 1px solid var(--color-border);
 }
 
 .nav-tabs {
@@ -243,7 +282,7 @@ body {
 
 .nav-tabs a {
   padding: 0.625rem 1.25rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.938rem;
@@ -253,13 +292,13 @@ body {
 }
 
 .nav-tabs a:hover {
-  color: #0f172a;
-  background: #f1f5f9;
+  color: var(--color-text-primary);
+  background: var(--color-border-subtle);
 }
 
 .nav-tabs a.active {
-  color: #2563eb;
-  background: #eff6ff;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
 }
 
 .nav-tabs a.active::after {
@@ -269,7 +308,7 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: #2563eb;
+  background: var(--color-primary);
 }
 
 .main-content {
@@ -287,13 +326,13 @@ body {
 .page-header h2 {
   font-size: 1.875rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-primary);
   margin-bottom: 0.375rem;
   letter-spacing: -0.025em;
 }
 
 .page-header p {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.938rem;
 }
 
@@ -305,20 +344,21 @@ body {
 }
 
 .stat-card {
-  background: white;
+  background: var(--color-surface);
   padding: 1.25rem;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
 }
 
 .stat-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .stat-label {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -329,7 +369,7 @@ body {
 .stat-value {
   font-size: 2.25rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-primary);
   letter-spacing: -0.025em;
 }
 
@@ -350,11 +390,18 @@ body {
 }
 
 .card {
-  background: white;
-  border-radius: 10px;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
   padding: 1.25rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
   margin-bottom: 1.25rem;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .card-header {
@@ -363,13 +410,15 @@ body {
   align-items: center;
   margin-bottom: 1rem;
   padding-bottom: 0.875rem;
-  border-bottom: 1px solid #e2e8f0;
+  padding-left: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-primary);
 }
 
 .card-title {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-primary);
   letter-spacing: -0.025em;
 }
 
@@ -383,16 +432,16 @@ table {
 }
 
 thead {
-  background: #f8fafc;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
 
 th {
   text-align: left;
   padding: 0.5rem 0.75rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--color-text-secondary);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -400,8 +449,8 @@ th {
 
 td {
   padding: 0.5rem 0.75rem;
-  border-top: 1px solid #f1f5f9;
-  color: #334155;
+  border-top: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
   font-size: 0.875rem;
 }
 
@@ -410,13 +459,13 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: #f8fafc;
+  background: var(--color-primary-light);
 }
 
 .badge {
   display: inline-block;
   padding: 0.313rem 0.75rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -476,7 +525,7 @@ tbody tr:hover {
 .loading {
   text-align: center;
   padding: 3rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.938rem;
 }
 
@@ -485,22 +534,13 @@ tbody tr:hover {
   border: 1px solid #fecaca;
   color: #991b1b;
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   margin: 1rem 0;
   font-size: 0.938rem;
 }
 
-/* Dark mode overrides */
-html.dark body {
-  background: #0f172a;
-  color: #e2e8f0;
-}
-
-html.dark .top-nav {
-  background: #1e293b;
-  border-color: #334155;
-}
-
+/* Dark mode — structural overrides needed to beat scoped component styles
+   (global token cascade loses to scoped selectors with higher specificity) */
 html.dark .card,
 html.dark .stat-card {
   background: #1e293b;
@@ -515,54 +555,21 @@ html.dark .card-header {
   border-color: #334155;
 }
 
-html.dark table thead {
-  background: #1e293b;
-}
-
-html.dark th {
+html.dark .stat-label {
   color: #94a3b8;
 }
 
-html.dark td {
-  color: #cbd5e1;
-  border-color: #1e293b;
+html.dark .stat-value {
+  color: #f1f5f9;
 }
 
-html.dark tbody tr:hover {
-  background: #1e293b;
-}
-
-html.dark .nav-tabs a {
-  color: #94a3b8;
-}
-
+/* Dark mode — nav active state uses special dark-only colors */
 html.dark .nav-tabs a.active {
   color: #60a5fa;
   background: #1e3a5f;
 }
 
-html.dark .logo h1 {
-  color: #f1f5f9;
-}
-
-html.dark .subtitle {
-  color: #94a3b8;
-}
-
-html.dark .page-header h2 {
-  color: #f1f5f9;
-}
-
-html.dark .page-header p {
-  color: #94a3b8;
-}
-
 /* FilterBar */
-html.dark .filters-bar {
-  background: #1e293b;
-  border-color: #334155;
-}
-
 html.dark .filter-group label {
   color: #94a3b8;
 }
@@ -836,18 +843,6 @@ html.dark .reports-table tr:hover {
 
 html.dark .bar-label {
   color: #94a3b8;
-}
-
-html.dark .stat-card {
-  background: #1e293b;
-}
-
-html.dark .stat-label {
-  color: #94a3b8;
-}
-
-html.dark .stat-value {
-  color: #f1f5f9;
 }
 
 html.dark .stat-meta {
