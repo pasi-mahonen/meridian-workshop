@@ -111,3 +111,55 @@ class TestProfileDetailsModal:
         self.pom.close_profile_modal_via_footer()
         self.pom.expect_profile_modal_hidden()
         attach_screenshot(page, request, "profile_details_closed_via_footer")
+
+
+class TestMyTasksCRUD:
+    """CRUD operations in the My Tasks modal (backed by the live API)."""
+
+    @pytest.fixture(autouse=True)
+    def setup(self, profile: ProfilePage):
+        self.pom = profile
+
+    def test_create_task_appears_in_list(self, page: Page, request: pytest.FixtureRequest):
+        """Creating a task via the form adds it to the list."""
+        self.pom.click_my_tasks()
+        initial_count = self.pom.get_task_items().count()
+        self.pom.create_task("CRUD test — create", "High", "2026-12-31")
+        expect(page.get_by_text("CRUD test — create")).to_be_visible()
+        expect(self.pom.get_task_items()).to_have_count(initial_count + 1)
+        attach_screenshot(page, request, "task_created")
+        # cleanup so other tests start from the same baseline
+        self.pom.delete_task_by_title("CRUD test — create")
+
+    def test_toggle_task_marks_completed(self, page: Page, request: pytest.FixtureRequest):
+        """Clicking a task's checkbox flips its status to Completed."""
+        self.pom.click_my_tasks()
+        self.pom.create_task("CRUD test — toggle", "Medium", "2026-12-31")
+        self.pom.toggle_task_by_title("CRUD test — toggle")
+        expect(self.pom.get_task_status_locator("CRUD test — toggle")).to_have_text("Completed")
+        attach_screenshot(page, request, "task_toggled_completed")
+        # cleanup
+        self.pom.delete_task_by_title("CRUD test — toggle")
+
+    def test_toggle_task_back_to_pending(self, page: Page, request: pytest.FixtureRequest):
+        """Toggling a completed task marks it pending again."""
+        self.pom.click_my_tasks()
+        self.pom.create_task("CRUD test — untoggle", "Low", "2026-12-31")
+        self.pom.toggle_task_by_title("CRUD test — untoggle")
+        expect(self.pom.get_task_status_locator("CRUD test — untoggle")).to_have_text("Completed")
+        self.pom.toggle_task_by_title("CRUD test — untoggle")
+        expect(self.pom.get_task_status_locator("CRUD test — untoggle")).not_to_have_text("Completed")
+        attach_screenshot(page, request, "task_untoggled")
+        # cleanup
+        self.pom.delete_task_by_title("CRUD test — untoggle")
+
+    def test_delete_task_removes_from_list(self, page: Page, request: pytest.FixtureRequest):
+        """Clicking × removes the task from the list."""
+        self.pom.click_my_tasks()
+        initial_count = self.pom.get_task_items().count()
+        self.pom.create_task("CRUD test — delete", "High", "2026-12-31")
+        expect(self.pom.get_task_items()).to_have_count(initial_count + 1)
+        self.pom.delete_task_by_title("CRUD test — delete")
+        expect(self.pom.get_task_items()).to_have_count(initial_count)
+        expect(page.get_by_text("CRUD test — delete")).not_to_be_visible()
+        attach_screenshot(page, request, "task_deleted")

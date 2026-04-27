@@ -50,6 +50,25 @@ class ProfilePage(BasePage):
     def get_pending_task_badge(self):
         return self.page.locator(".task-badge")
 
+    def create_task(self, title: str, priority: str = "Medium", due_date: str = "2026-12-31") -> None:
+        """Fill the new-task form and submit it."""
+        self.page.get_by_placeholder("Enter task title...").fill(title)
+        self.page.get_by_label("Priority").select_option(priority)
+        self.page.locator("input[type='date']").fill(due_date)
+        self.page.get_by_role("button", name="Add Task").click()
+
+    def delete_task_by_title(self, title: str) -> None:
+        """Click the × delete button on the task whose title matches."""
+        self.page.locator(".task-item").filter(has_text=title).get_by_role("button", name="×").click()
+
+    def toggle_task_by_title(self, title: str) -> None:
+        """Click the checkbox on the task whose title matches."""
+        self.page.locator(".task-item").filter(has_text=title).get_by_role("checkbox").click()
+
+    def get_task_status_locator(self, title: str):
+        """Return the status badge locator for the task with the given title."""
+        return self.page.locator(".task-item").filter(has_text=title).locator(".status-badge")
+
     # --- Profile Details modal ---
 
     def expect_profile_modal_visible(self) -> None:
