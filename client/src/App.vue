@@ -30,6 +30,7 @@
           </router-link>
         </nav>
         <LanguageSwitcher />
+        <DarkModeToggle />
         <ProfileMenu
           @show-profile-details="showProfileDetails = true"
           @show-tasks="showTasks = true"
@@ -67,6 +68,7 @@ import ProfileMenu from './components/ProfileMenu.vue'
 import ProfileDetailsModal from './components/ProfileDetailsModal.vue'
 import TasksModal from './components/TasksModal.vue'
 import LanguageSwitcher from './components/LanguageSwitcher.vue'
+import DarkModeToggle from './components/DarkModeToggle.vue'
 
 export default {
   name: 'App',
@@ -75,7 +77,8 @@ export default {
     ProfileMenu,
     ProfileDetailsModal,
     TasksModal,
-    LanguageSwitcher
+    LanguageSwitcher,
+    DarkModeToggle
   },
   setup() {
     const { currentUser } = useAuth()
@@ -485,5 +488,489 @@ tbody tr:hover {
   border-radius: 8px;
   margin: 1rem 0;
   font-size: 0.938rem;
+}
+
+/* Dark mode overrides */
+html.dark body {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+html.dark .top-nav {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+html.dark .card,
+html.dark .stat-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+html.dark .card-title {
+  color: #f1f5f9;
+}
+
+html.dark .card-header {
+  border-color: #334155;
+}
+
+html.dark table thead {
+  background: #1e293b;
+}
+
+html.dark th {
+  color: #94a3b8;
+}
+
+html.dark td {
+  color: #cbd5e1;
+  border-color: #1e293b;
+}
+
+html.dark tbody tr:hover {
+  background: #1e293b;
+}
+
+html.dark .nav-tabs a {
+  color: #94a3b8;
+}
+
+html.dark .nav-tabs a.active {
+  color: #60a5fa;
+  background: #1e3a5f;
+}
+
+html.dark .logo h1 {
+  color: #f1f5f9;
+}
+
+html.dark .subtitle {
+  color: #94a3b8;
+}
+
+html.dark .page-header h2 {
+  color: #f1f5f9;
+}
+
+html.dark .page-header p {
+  color: #94a3b8;
+}
+
+/* FilterBar */
+html.dark .filters-bar {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+html.dark .filter-group label {
+  color: #94a3b8;
+}
+
+html.dark .filter-select {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-color: #475569;
+}
+
+html.dark .filter-select:hover {
+  border-color: #64748b;
+}
+
+html.dark .reset-filters-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #64748b;
+}
+
+/* Restocking — scorecard cards */
+html.dark .scorecard {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+html.dark .scorecard-label {
+  color: #94a3b8;
+}
+
+html.dark .scorecard-value {
+  color: #f1f5f9;
+}
+
+/* Restocking — budget row and controls */
+html.dark .budget-row {
+  background: #1e293b;
+  box-shadow: none;
+}
+
+html.dark .budget-label {
+  color: #94a3b8;
+}
+
+html.dark .budget-input {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-color: #475569;
+}
+
+html.dark .currency-symbol {
+  color: #94a3b8;
+}
+
+html.dark .summary-bar {
+  color: #94a3b8;
+}
+
+html.dark .summary-item strong {
+  color: #f1f5f9;
+}
+
+html.dark .summary-divider {
+  color: #475569;
+}
+
+html.dark .clear-btn {
+  background: #334155;
+  color: #94a3b8;
+}
+
+html.dark .clear-btn:hover {
+  background: #475569;
+}
+
+/* Restocking — table */
+html.dark .restocking-table th {
+  background: #1e293b;
+  color: #94a3b8;
+  border-color: #334155;
+}
+
+html.dark .restocking-table td {
+  color: #cbd5e1;
+  border-color: #334155;
+}
+
+html.dark .restocking-table tr:hover {
+  background: #1e293b;
+}
+
+html.dark .empty-state {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+/* Input and select elements globally */
+html.dark input[type="number"],
+html.dark input[type="text"],
+html.dark select {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-color: #475569;
+}
+
+/* Dashboard — SVG fills */
+html.dark .donut-center-label {
+  fill: #94a3b8;
+}
+
+html.dark .donut-center-value {
+  fill: #f1f5f9;
+}
+
+/* Dashboard */
+html.dark .kpi-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+html.dark .kpi-label,
+html.dark .kpi-goal,
+html.dark .header-meta,
+html.dark .section-title,
+html.dark .legend-item,
+html.dark .legend-item-compact,
+html.dark .health-metric-label,
+html.dark .h-bar-label,
+html.dark .line-bar-label,
+html.dark .no-data,
+html.dark .no-tasks {
+  color: #94a3b8;
+}
+
+html.dark .kpi-value,
+html.dark .health-metric-value,
+html.dark .task-text {
+  color: #f1f5f9;
+}
+
+html.dark .kpi-progress-bar,
+html.dark .h-bar-container {
+  background: #334155;
+}
+
+html.dark .line-y-axis {
+  color: #64748b;
+  border-color: #334155;
+}
+
+html.dark .line-bar.empty-bar {
+  background: #334155;
+}
+
+html.dark .line-bar.empty-bar:hover {
+  background: #475569;
+}
+
+html.dark .clickable-row:hover {
+  background: #1e3a5f !important;
+}
+
+html.dark .task-input {
+  border-color: #475569;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+html.dark .task-item {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+html.dark .task-item:hover {
+  background: #1e293b;
+  border-color: #475569;
+}
+
+/* Inventory */
+html.dark .search-input {
+  background: #0f172a;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+html.dark .search-input:focus {
+  background: #1e293b;
+  border-color: #3b82f6;
+}
+
+html.dark .search-input::placeholder {
+  color: #475569;
+}
+
+html.dark .clear-search:hover {
+  background: #334155;
+  color: #94a3b8;
+}
+
+/* Orders */
+html.dark .items-dropdown {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+html.dark .item-entry {
+  border-color: #334155;
+}
+
+html.dark .item-name {
+  color: #e2e8f0;
+}
+
+html.dark .item-meta {
+  color: #94a3b8;
+}
+
+/* Demand */
+html.dark .trend-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+html.dark .increasing-card .trend-icon {
+  background: #064e3b;
+}
+
+html.dark .stable-card .trend-icon {
+  background: #1e3a5f;
+}
+
+html.dark .decreasing-card .trend-icon {
+  background: #7f1d1d;
+}
+
+html.dark .trend-label {
+  color: #94a3b8;
+}
+
+html.dark .trend-count {
+  color: #f1f5f9;
+}
+
+html.dark .trend-item {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+html.dark .trend-item:hover {
+  background: #1e293b;
+}
+
+html.dark .more-items {
+  color: #64748b;
+}
+
+/* Reports */
+html.dark .reports-table th {
+  background: #1e293b;
+  color: #94a3b8;
+  border-color: #334155;
+}
+
+html.dark .reports-table td {
+  border-color: #334155;
+}
+
+html.dark .reports-table tr:hover {
+  background: #1e293b;
+}
+
+html.dark .bar-label {
+  color: #94a3b8;
+}
+
+html.dark .stat-card {
+  background: #1e293b;
+}
+
+html.dark .stat-label {
+  color: #94a3b8;
+}
+
+html.dark .stat-value {
+  color: #f1f5f9;
+}
+
+html.dark .stat-meta {
+  color: #94a3b8;
+}
+
+/* Spending */
+html.dark .category-name {
+  color: #e2e8f0;
+}
+
+html.dark .category-bar-container {
+  background: #334155;
+}
+
+html.dark .transactions-table thead {
+  background: #1e293b;
+}
+
+html.dark .transactions-table th {
+  color: #94a3b8;
+  border-color: #334155;
+}
+
+html.dark .transactions-table td {
+  border-color: #334155;
+}
+
+html.dark .transactions-table tbody tr:hover {
+  background: #1e293b;
+}
+
+html.dark .transactions-table tbody tr.clickable-row:hover {
+  background: #1e3a5f;
+}
+
+html.dark .transaction-id,
+html.dark .transaction-vendor,
+html.dark .transaction-date {
+  color: #94a3b8;
+}
+
+html.dark .transaction-description,
+html.dark .transaction-amount {
+  color: #e2e8f0;
+}
+
+html.dark .y-axis {
+  color: #64748b;
+  border-color: #334155;
+}
+
+html.dark .legend-item {
+  color: #94a3b8;
+}
+
+/* Spending — fix near-invisible border on stat cards */
+html.dark .revenue-card,
+html.dark .profit-card {
+  background: #1e293b;
+}
+
+/* Nav controls — dark mode toggle, language switcher, profile menu */
+html.dark .dark-mode-toggle {
+  color: #94a3b8;
+  border-color: #334155;
+}
+
+html.dark .dark-mode-toggle:hover {
+  color: #e2e8f0;
+  border-color: #475569;
+  background: #1e293b;
+}
+
+html.dark .language-button,
+html.dark .profile-button {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+html.dark .language-button:hover,
+html.dark .profile-button:hover {
+  background: #334155;
+  border-color: #475569;
+}
+
+html.dark .profile-name {
+  color: #e2e8f0;
+}
+
+html.dark .language-switcher .dropdown-menu,
+html.dark .profile-menu .dropdown-menu {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+html.dark .dropdown-header {
+  background: #0f172a;
+}
+
+html.dark .user-name {
+  color: #f1f5f9;
+}
+
+html.dark .user-email {
+  color: #94a3b8;
+}
+
+html.dark .dropdown-divider {
+  background: #334155;
+}
+
+html.dark .dropdown-item {
+  color: #cbd5e1;
+}
+
+html.dark .dropdown-item:hover {
+  background: #334155;
+}
+
+html.dark .dropdown-item.active {
+  background: #1e3a5f;
+  color: #60a5fa;
 }
 </style>

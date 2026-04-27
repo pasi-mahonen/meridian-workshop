@@ -5,6 +5,25 @@
       <p>{{ t('restocking.description') }}</p>
     </div>
 
+    <div v-if="!loading && !error" class="scorecard-row">
+      <div class="scorecard">
+        <div class="scorecard-label">Items Recommended</div>
+        <div class="scorecard-value">{{ items.length }}</div>
+      </div>
+      <div class="scorecard">
+        <div class="scorecard-label">Total Estimated Cost</div>
+        <div class="scorecard-value">{{ formatCurrency(totalCost) }}</div>
+      </div>
+      <div class="scorecard">
+        <div class="scorecard-label">Items Below Reorder</div>
+        <div class="scorecard-value warning">{{ itemsBelowReorder }}</div>
+      </div>
+      <div class="scorecard">
+        <div class="scorecard-label">High Priority Items</div>
+        <div class="scorecard-value danger">{{ highPriorityCount }}</div>
+      </div>
+    </div>
+
     <div class="budget-row">
       <div class="budget-input-group">
         <label class="budget-label">{{ t('restocking.budgetLabel') }}</label>
@@ -104,6 +123,14 @@ export default {
       items.value.reduce((sum, item) => sum + item.estimated_cost, 0)
     )
 
+    const itemsBelowReorder = computed(() =>
+      items.value.filter(i => i.quantity_on_hand < i.reorder_point).length
+    )
+
+    const highPriorityCount = computed(() =>
+      items.value.filter(i => i.priority_score >= 4).length
+    )
+
     const loadData = async () => {
       try {
         loading.value = true
@@ -167,6 +194,8 @@ export default {
       budgetInput,
       budget,
       totalCost,
+      itemsBelowReorder,
+      highPriorityCount,
       applyBudget,
       clearBudget,
       formatCurrency,
@@ -182,6 +211,39 @@ export default {
 .restocking {
   padding: 0;
 }
+
+.scorecard-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.scorecard {
+  background: white;
+  border-radius: 10px;
+  padding: 1.25rem;
+  border: 1px solid #e2e8f0;
+}
+
+.scorecard-label {
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.scorecard-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.025em;
+}
+
+.scorecard-value.warning { color: #ea580c; }
+.scorecard-value.danger  { color: #dc2626; }
 
 .budget-row {
   display: flex;
