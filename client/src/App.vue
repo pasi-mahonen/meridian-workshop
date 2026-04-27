@@ -1,46 +1,62 @@
 <template>
   <div class="app">
-    <header class="top-nav">
-      <div class="nav-container">
-        <div class="logo">
-          <h1>{{ t('nav.companyName') }}</h1>
-          <span class="subtitle">{{ t('nav.subtitle') }}</span>
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-mark">MC</div>
+        <div class="brand-text">
+          <span class="brand-name">{{ t('nav.companyName') }}</span>
+          <span class="brand-sub">{{ t('nav.subtitle') }}</span>
         </div>
-        <nav class="nav-tabs">
-          <router-link to="/" :class="{ active: $route.path === '/' }">
-            {{ t('nav.overview') }}
-          </router-link>
-          <router-link to="/inventory" :class="{ active: $route.path === '/inventory' }">
-            {{ t('nav.inventory') }}
-          </router-link>
-          <router-link to="/orders" :class="{ active: $route.path === '/orders' }">
-            {{ t('nav.orders') }}
-          </router-link>
-          <router-link to="/spending" :class="{ active: $route.path === '/spending' }">
-            {{ t('nav.finance') }}
-          </router-link>
-          <router-link to="/demand" :class="{ active: $route.path === '/demand' }">
-            {{ t('nav.demandForecast') }}
-          </router-link>
-          <router-link to="/reports" :class="{ active: $route.path === '/reports' }">
-            {{ t('nav.reports') }}
-          </router-link>
-          <router-link to="/restocking" :class="{ active: $route.path === '/restocking' }">
-            {{ t('nav.restocking') }}
-          </router-link>
-        </nav>
-        <LanguageSwitcher />
-        <DarkModeToggle />
-        <ProfileMenu
-          @show-profile-details="showProfileDetails = true"
-          @show-tasks="showTasks = true"
-        />
       </div>
-    </header>
-    <FilterBar />
-    <main class="main-content">
-      <router-view />
-    </main>
+
+      <nav class="sidebar-nav">
+        <router-link to="/" :class="{ active: $route.path === '/' }">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+          {{ t('nav.overview') }}
+        </router-link>
+        <router-link to="/inventory" :class="{ active: $route.path === '/inventory' }">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+          {{ t('nav.inventory') }}
+        </router-link>
+        <router-link to="/orders" :class="{ active: $route.path === '/orders' }">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+          {{ t('nav.orders') }}
+        </router-link>
+        <router-link to="/spending" :class="{ active: $route.path === '/spending' }">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          {{ t('nav.finance') }}
+        </router-link>
+        <router-link to="/demand" :class="{ active: $route.path === '/demand' }">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+          {{ t('nav.demandForecast') }}
+        </router-link>
+        <router-link to="/reports" :class="{ active: $route.path === '/reports' }">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+          {{ t('nav.reports') }}
+        </router-link>
+        <router-link to="/restocking" :class="{ active: $route.path === '/restocking' }">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+          {{ t('nav.restocking') }}
+        </router-link>
+      </nav>
+
+    </aside>
+
+    <div class="content-wrapper">
+      <FilterBar>
+        <template #controls>
+          <LanguageSwitcher />
+          <DarkModeToggle />
+          <ProfileMenu
+            @show-profile-details="showProfileDetails = true"
+            @show-tasks="showTasks = true"
+          />
+        </template>
+      </FilterBar>
+      <main class="main-content">
+        <router-view />
+      </main>
+    </div>
 
     <ProfileDetailsModal
       :is-open="showProfileDetails"
@@ -176,6 +192,7 @@ export default {
   --color-primary-light:  #eff6ff;
   --color-primary-hover:  #1d4ed8;
   --color-bg:             #f1f5f9;
+  --color-chrome:         #f8fafc;
   --color-surface:        #ffffff;
   --color-surface-raised: #ffffff;
   --color-border:         #e2e8f0;
@@ -195,6 +212,7 @@ export default {
 
 html.dark {
   --color-bg:             #0f172a;
+  --color-chrome:         #1e293b;
   --color-surface:        #1e293b;
   --color-surface-raised: #1e293b;
   --color-border:         #334155;
@@ -221,104 +239,175 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ============================================================
+   APP LAYOUT — sidebar + content
+   ============================================================ */
 .app {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   min-height: 100vh;
 }
 
-.top-nav {
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--color-chrome);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   position: sticky;
   top: 0;
+  overflow: visible;
   z-index: 100;
 }
 
-.nav-container {
-  max-width: 1600px;
-  margin: 0 auto;
+html.dark .sidebar {
+  background: #1e293b;
+  border-right-color: rgba(255,255,255,0.06);
+}
+
+.sidebar-brand {
   display: flex;
   align-items: center;
-  padding: 0 2rem;
-  height: 70px;
-}
-
-.nav-container > .nav-tabs {
-  margin-left: auto;
-  margin-right: 1rem;
-}
-
-.nav-container > .language-switcher {
-  margin-right: 1rem;
-}
-
-.logo {
-  display: flex;
-  align-items: baseline;
   gap: 0.75rem;
+  padding: 1.375rem 1.25rem 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-.logo h1 {
-  font-size: 1.375rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  letter-spacing: -0.025em;
+html.dark .sidebar-brand {
+  border-bottom-color: rgba(255,255,255,0.07);
 }
 
-.subtitle {
-  font-size: 0.813rem;
-  color: var(--color-text-secondary);
-  font-weight: 400;
-  padding-left: 0.75rem;
-  border-left: 1px solid var(--color-border);
-}
-
-.nav-tabs {
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  background: #2563eb;
+  border-radius: 8px;
   display: flex;
-  gap: 0.25rem;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.688rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
 }
 
-.nav-tabs a {
-  padding: 0.625rem 1.25rem;
-  color: var(--color-text-secondary);
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brand-name {
+  font-size: 0.813rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+html.dark .brand-name {
+  color: #f1f5f9;
+}
+
+.brand-sub {
+  font-size: 0.688rem;
+  color: #64748b;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.875rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  overflow-y: auto;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.563rem 0.75rem;
+  border-radius: 8px;
+  color: #64748b;
   text-decoration: none;
+  font-size: 0.875rem;
   font-weight: 500;
-  font-size: 0.938rem;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  transition: background 0.15s ease, color 0.15s ease;
   position: relative;
 }
 
-.nav-tabs a:hover {
-  color: var(--color-text-primary);
-  background: var(--color-border-subtle);
+.sidebar-nav a svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.7;
 }
 
-.nav-tabs a.active {
-  color: var(--color-primary);
-  background: var(--color-primary-light);
+.sidebar-nav a:hover {
+  background: rgba(0,0,0,0.04);
+  color: #0f172a;
 }
 
-.nav-tabs a.active::after {
+.sidebar-nav a:hover svg {
+  opacity: 1;
+}
+
+.sidebar-nav a.active {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.sidebar-nav a.active svg {
+  opacity: 1;
+}
+
+.sidebar-nav a.active::before {
   content: '';
   position: absolute;
-  bottom: -1px;
   left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--color-primary);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: #2563eb;
+  border-radius: 0 2px 2px 0;
+}
+
+html.dark .sidebar-nav a              { color: #94a3b8; }
+html.dark .sidebar-nav a svg          { opacity: 0.8; }
+html.dark .sidebar-nav a:hover        { background: rgba(255,255,255,0.06); color: #cbd5e1; }
+html.dark .sidebar-nav a.active       { background: rgba(37,99,235,0.18); color: #60a5fa; }
+html.dark .sidebar-nav a.active::before { background: #3b82f6; }
+
+/* ============================================================
+   CONTENT AREA
+   ============================================================ */
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
 }
 
 .main-content {
   flex: 1;
-  max-width: 1600px;
-  width: 100%;
-  margin: 0 auto;
   padding: 1.5rem 2rem;
 }
 
+/* ============================================================
+   GLOBAL COMPONENT STYLES
+   ============================================================ */
 .page-header {
   margin-bottom: 1.5rem;
 }
@@ -545,8 +634,11 @@ tbody tr:hover {
   font-size: 0.938rem;
 }
 
-/* Dark mode — structural overrides needed to beat scoped component styles
-   (global token cascade loses to scoped selectors with higher specificity) */
+/* ============================================================
+   DARK MODE — structural overrides needed to beat scoped
+   component styles (global token cascade loses to scoped
+   selectors with higher specificity)
+   ============================================================ */
 html.dark .card,
 html.dark .stat-card {
   background: #1e293b;
@@ -572,12 +664,6 @@ html.dark .stat-label {
 
 html.dark .stat-value {
   color: #f1f5f9;
-}
-
-/* Dark mode — nav active state uses special dark-only colors */
-html.dark .nav-tabs a.active {
-  color: #60a5fa;
-  background: #1e3a5f;
 }
 
 /* FilterBar */
@@ -743,21 +829,6 @@ html.dark .clickable-row:hover {
   background: #1e3a5f !important;
 }
 
-html.dark .task-input {
-  border-color: #475569;
-  background: #0f172a;
-  color: #e2e8f0;
-}
-
-html.dark .task-item {
-  background: #0f172a;
-  border-color: #334155;
-}
-
-html.dark .task-item:hover {
-  background: #1e293b;
-  border-color: #475569;
-}
 
 /* Inventory */
 html.dark .search-input {
@@ -919,26 +990,26 @@ html.dark .profit-card {
 /* Nav controls — dark mode toggle, language switcher, profile menu */
 html.dark .dark-mode-toggle {
   color: #94a3b8;
-  border-color: #334155;
+  border-color: rgba(255,255,255,0.1);
 }
 
 html.dark .dark-mode-toggle:hover {
   color: #e2e8f0;
-  border-color: #475569;
-  background: #1e293b;
+  border-color: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
 }
 
 html.dark .language-button,
 html.dark .profile-button {
-  background: #1e293b;
-  border-color: #334155;
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
   color: #cbd5e1;
 }
 
 html.dark .language-button:hover,
 html.dark .profile-button:hover {
-  background: #334155;
-  border-color: #475569;
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
 }
 
 html.dark .profile-name {
